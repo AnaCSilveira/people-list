@@ -10,23 +10,44 @@ import {
   Button,
   Input,
 } from "@fluentui/react-components";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { StyleButton } from "./Modal.styled";
 
-export const AddPeopleModal = ({ onSave }) => {
+export const AddPeopleModal = ({ onSave, personToEdit, isEditing }) => {
   const [name, setName] = useState("");
   const [lastName, setLastName] = useState("");
   const [age, setAge] = useState("");
   const [profession, setProfession] = useState("");
   const [id, setId] = useState("");
 
+  useEffect(() => {
+    if (isEditing && personToEdit) {
+      setName(personToEdit.name);
+      setLastName(personToEdit.lastName);
+      setAge(personToEdit.age);
+      setProfession(personToEdit.profession);
+      setId(personToEdit.id);
+    } else {
+      setName("");
+      setLastName("");
+      setAge("");
+      setProfession("");
+      setId("");
+    }
+  }, [isEditing, personToEdit]);
+
   return (
     <Dialog>
       <DialogTrigger disableButtonEnhancement>
-        <Button appearance="primary">Add</Button>
+        <StyleButton appearance="primary">
+          {isEditing ? "Edit" : "Add"}
+        </StyleButton>
       </DialogTrigger>
       <DialogSurface>
         <DialogBody>
-          <DialogTitle>Fill in the data</DialogTitle>
+          <DialogTitle>
+            {isEditing ? "Edit Employee" : "Add Employee"}
+          </DialogTitle>
           <DialogContent>
             <div>
               {" "}
@@ -73,7 +94,14 @@ export const AddPeopleModal = ({ onSave }) => {
             <DialogTrigger disableButtonEnhancement>
               <Button appearance="secondary">Close</Button>
             </DialogTrigger>
-            <Button appearance="primary" onClick={()=>{onSave(id, name, lastName, age, profession)}}>Save</Button>
+            <Button
+              appearance="primary"
+              onClick={() => {
+                onSave(id, name, lastName, age, profession);
+              }}
+            >
+              {isEditing ? "Update" : "Save"}
+            </Button>
           </DialogActions>
         </DialogBody>
       </DialogSurface>
