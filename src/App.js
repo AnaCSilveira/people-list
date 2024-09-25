@@ -14,54 +14,43 @@ import { StyleIcons } from "./App.styled";
 
 function App() {
   const [people, setPeople] = useState([]);
-  const [isEditing, setIsEditing] = useState(false);
   const [personToEdit, setPersonToEdit] = useState(null);
 
   const handleAddPeople = (id, name, lastName, age, profession) => {
-    if (isEditing) {
-      setPeople((currPeople) => {
-        return people.map((person) => {
-          if (person.id === personToEdit.id) {
-            return { ...person, name, lastName, age, profession };
-          }
-          return person;
-        });
-      });
-      setIsEditing(false);
-      setPersonToEdit(null);
+    if (id) {
+      setPeople((currPeople) =>
+        currPeople.map((person) =>
+          person.id === id
+            ? { ...person, name, lastName, age, profession }
+            : person
+        )
+      );
     } else {
-      setPeople((currPeople) => {
-        const newPerson = [
-          ...currPeople,
-          { id: faker.string.uuid(), name, lastName, age, profession },
-        ];
-        return newPerson;
-      });
+      const newPerson = {
+        id: faker.string.uuid(),
+        name,
+        lastName,
+        age,
+        profession,
+      };
+      setPeople((currPeople) => [...currPeople, newPerson]);
     }
+
+    setPersonToEdit(null);
   };
+
   const handleEdit = (person) => {
     setPersonToEdit(person);
-    setIsEditing(true);
   };
 
   const handleDelete = (id) => {
-    setPeople((currPeople) => {
-      console.log(currPeople);
-      const person = currPeople.filter((person) => {
-        return person.id !== id;
-      });
-      return person;
-    });
+    setPeople((currPeople) => currPeople.filter((person) => person.id !== id));
   };
 
   return (
     <StyledDiv>
       <StyledH1>Employee Directory</StyledH1>
-      <AddPeopleModal
-        onSave={handleAddPeople}
-        isEditing={isEditing}
-        personToEdit={personToEdit}
-      />
+      <AddPeopleModal onSave={handleAddPeople} personToEdit={personToEdit} />
 
       <StyleUl>
         {people.map((person) => {

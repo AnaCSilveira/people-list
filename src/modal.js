@@ -13,7 +13,7 @@ import {
 import { useState, useEffect } from "react";
 import { StyleButton } from "./Modal.styled";
 
-export const AddPeopleModal = ({ onSave, personToEdit, isEditing }) => {
+export const AddPeopleModal = ({ onSave, personToEdit }) => {
   const [name, setName] = useState("");
   const [lastName, setLastName] = useState("");
   const [age, setAge] = useState("");
@@ -21,7 +21,7 @@ export const AddPeopleModal = ({ onSave, personToEdit, isEditing }) => {
   const [id, setId] = useState("");
 
   useEffect(() => {
-    if (isEditing && personToEdit) {
+    if (personToEdit) {
       setName(personToEdit.name);
       setLastName(personToEdit.lastName);
       setAge(personToEdit.age);
@@ -34,21 +34,21 @@ export const AddPeopleModal = ({ onSave, personToEdit, isEditing }) => {
       setProfession("");
       setId("");
     }
-  }, [isEditing, personToEdit]);
+  }, [personToEdit]);
 
   return (
     <Dialog>
       <DialogTrigger disableButtonEnhancement>
         <StyleButton appearance="primary">
-          {isEditing ? "Edit" : "Add"}
+          {personToEdit ? "Edit" : "Add"}
         </StyleButton>
       </DialogTrigger>
       <DialogSurface>
         <DialogBody>
           <DialogTitle>
-            {isEditing ? "Edit Employee" : "Add Employee"}
+            {personToEdit? "Edit Employee" : "Add Employee"}
           </DialogTitle>
-          <DialogContent>
+          <DialogContent> 
             <div>
               {" "}
               Name:{" "}
@@ -100,7 +100,7 @@ export const AddPeopleModal = ({ onSave, personToEdit, isEditing }) => {
                 onSave(id, name, lastName, age, profession);
               }}
             >
-              {isEditing ? "Update" : "Save"}
+              {personToEdit ? "Update" : "Save"}
             </Button>
           </DialogActions>
         </DialogBody>
